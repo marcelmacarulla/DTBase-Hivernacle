@@ -1,0 +1,95 @@
+"""
+Utilities (miscellaneous routines) module
+"""
+import logging
+from typing import Optional, Tuple #I had to add Tuple
+
+import requests
+
+import configparser
+import pkg_resources
+
+
+#from dtbase.core.exc import BackendCallError
+
+ruta_archivo_config = pkg_resources.resource_filename(__name__, '../../ConfigFiles/DTBaseConfig.ini')
+config = configparser.ConfigParser()
+config.read(ruta_archivo_config)
+BACKEND_URL = config.get('DTBase', 'BACKEND_URL')
+DEFAULT_USER_EMAIL = config.get('DTBase', 'USER_NAME')
+DEFAULT_USER_PASS = config.get('DTBase', 'PASSWORD')
+
+def backend_call(
+    request_type: str,
+    end_point_path: str,
+    payload: Optional[dict] = None,
+    headers: Optional[dict] = None,
+) -> requests.Response:
+    """Make an API call to the backend server."""
+    headers = {} if headers is None else headers
+    request_func = getattr(requests, request_type)
+    url = f"{BACKEND_URL}{end_point_path}"
+    if payload:
+        #headers = headers | {"content-type": "application/json"} This doesn't work, i had to add the following line
+        headers.update({"content-type": "application/json"})
+        response = request_func(url, headers=headers, json=payload)
+    else:
+        response = request_func(url, headers=headers)
+    return response
+
+
+
+def login(
+    email: str = DEFAULT_USER_EMAIL, password: Optional[str] = DEFAULT_USER_PASS
+) -> Tuple[str, str]: #I had to change tuple for Tuple
+    """Log in to the backend server.
+
+    If no user credentials are provided, use the default ones.
+
+    Return an access token and a refresh token.
+    """
+    if password is None:
+        raise ValueError("Must provide a password.")
+    response = backend_call(
+        "post",
+        "/auth/login",
+        {"email": email, "password": password},
+    )
+    if response.status_code != 200:
+        #raise BackendCallError(response)
+        pass
+    access_token = response.json()["access_token"]
+    refresh_token = response.json()["refresh_token"]
+    return access_token, refresh_token
+
+
+def auth_backend_call(
+    request_type: str,
+    end_point_path: str,
+    payload: Optional[dict] = None,
+    headers: Optional[dict] = None,
+    token: Optional[str] = None,
+) -> requests.Response:
+    """Make an API call to the backend, with authentication.
+
+    If no access token is given, use the `login` function to get one with default
+    credentials.
+    """
+    if token is None:
+        token = login()[0]
+    if headers is None:
+        headers = {}
+    #headers = headers | {"Authorization": f"Bearer {token}"} I had to add the following line
+    headers.update({"Authorization": f"Bearer {token}"})
+    return backend_call(request_type, end_point_path, payload, headers)
+
+
+def log_rest_response(response: requests.Response) -> None:
+    """
+    Logging the response from the backend API
+    """
+    msg = f"Got response {response.status_code}: {response.text}"
+    if 300 > response.status_code:
+        logging.info(msg)
+    else:
+        logging.warning(msg)
