@@ -17,5 +17,18 @@ class SendSensors(BaseIngress):
             ),
         ]
 
+        # Create a sensor of that type.
+        return_value.append(
+            (
+                "/sensor/insert-sensor",
+                {
+                    "type_name": "Guardian",
+                    "unique_identifier": "GMOVE4EDUN",
+                    "name": "GMOVE4EDUN",
+                    "notes": "Integrated sensor",
+                },
+            ),
+        )
+
         print(return_value)
         return return_value

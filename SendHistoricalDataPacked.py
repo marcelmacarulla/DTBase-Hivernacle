@@ -26,37 +26,41 @@ print("Fecha convertida:", fecha_convertida)
 
 
 
-
+Variable="DewPoint"
 
 # Abrir el archivo CSV
 with open('exported_move4edu_db.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
-
+    temp=[]
+    stamp=[]
     # Iterar sobre cada fila del CSV
     for row in reader:
         # Aquí puedes acceder a los valores de cada columna
         timestamp = row['date']
-        print(timestamp)
+        #print(timestamp)
         timestamp = convertir_fecha(timestamp)
-        print(timestamp)
+        #print(timestamp)
         try:
-            temperatura = float(row['Temperature'])
-            print(temperatura)
-
-            # Construir el mensaje con los datos de la fila actual
-            data = {
-                "measure_name": "Temperature",
-                "unique_identifier": "GMOVE4EDUN",
-                "readings": [temperatura],
-                "timestamps": [timestamp]
-            }
-
-            t=send.postData(data)
-            # Imprimir el mensaje (o hacer lo que quieras con él)
-            print(data)
-            print(t)
+            temperatura = float(row[Variable])
+            stamp.append(timestamp)
+            #print(temperatura)
+            temp.append(temperatura)
         except:
-            print("NA!")
+            #print("NA!")
+            pass
+
+print(len(temp))
+print(len(stamp))
+# Construir el mensaje con los datos de la fila actual
+data = {
+        "measure_name": "DewPoint",
+        "unique_identifier": "GMOVE4EDUN",
+        "readings": temp,
+        "timestamps": stamp,
+        }
+#print(temp)
+#print(stamp)
+t = send.postData(data)
 
 # Some made up example data.
 data = {
