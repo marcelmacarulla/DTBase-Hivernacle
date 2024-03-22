@@ -51,10 +51,12 @@ class ModBusSensors:
 
         return resultado
 
-    def build_message(self):
+    def build_message(self, reading, date):
         data=[]
+        i=0
         for sensor in self.sensors:
             type=sensor['type_name']
+            reading[i]
             # Buscar el diccionario con 'id' igual a 2
             for diccionario in self.types:
                 if diccionario['type_name'] == type:
@@ -62,14 +64,15 @@ class ModBusSensors:
                         data.append({
                             'measure_name': type['name'],
                             'unique_identifier': sensor['unique_identifier'],
-                            'readings': [1.1],
-                            'timestamps': ['2024-01-02T00:00:00'],
+                            'readings': reading[i][type['name']],
+                            'timestamps': [date],
                         })
                     break
+            i=i+1
         return (data)
 
-    def send_message(self):
-        message = self.build_message()
+    def send_message(self, reading, date):
+        message = self.build_message(reading, date)
         t=self.DTBaseDataIngress(data=message, dt_user_email=self.USERNAME, dt_user_password=self.PASSWORD)
-        print(t)
-        print(t[1])
+        #print(t)
+        #print(t[1])

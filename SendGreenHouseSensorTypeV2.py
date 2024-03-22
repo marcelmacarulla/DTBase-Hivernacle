@@ -32,3 +32,4 @@ for (type_name,  description), grupo in grupos:
 send = SendSensorType()
 t=send(data=resultado, dt_user_email=USERNAME, dt_user_password=PASSWORD)
 print(t[0].text)
+print(t)
