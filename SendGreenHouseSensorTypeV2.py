@@ -8,7 +8,7 @@ PASSWORD = "Fjfk2kCthoF0eS7MfG6Eqb5"
 
 
 # Leer el archivo Excel
-df = pd.read_excel('./ConfigFiles/DT-base-type-sensors.xlsx')
+df = pd.read_excel('./ConfigFiles/DT-base-type-sensors-weather-station.xlsx')
 
 # Agrupar por valores únicos en la primera columna
 grupos = df.groupby(['type_name', 'description'])
@@ -32,4 +32,4 @@ for (type_name,  description), grupo in grupos:
 send = SendSensorType()
 t=send(data=resultado, dt_user_email=USERNAME, dt_user_password=PASSWORD)
 print(t[0].text)
-print(t)
+print(t[0])

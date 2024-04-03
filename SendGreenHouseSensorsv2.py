@@ -15,7 +15,7 @@ USERNAME = "marcel.macarulla@upc.edu"
 PASSWORD = "Fjfk2kCthoF0eS7MfG6Eqb5"
 
 # Carga el archivo Excel en un DataFrame
-df = pd.read_excel('./ConfigFiles/DT-base-sensors.xlsx', sheet_name='DT-base-sensors', usecols='A:D', skipfooter=1)
+df = pd.read_excel('./ConfigFiles/DT-base-sensors-weather-station.xlsx', sheet_name='DT-base-sensors', usecols='A:D', skipfooter=1)
 
 # Elimina las filas que contienen valores NA
 df = df.dropna()
@@ -26,6 +26,8 @@ data = df.to_dict(orient='records')
 # Send all sensors to the DTBase
 send = SendSensorsv2()
 objects=send(data=data, dt_user_email=USERNAME, dt_user_password=PASSWORD)
+
+print(objects)
 
 # Lista para almacenar los detalles
 detalles = []

@@ -86,9 +86,9 @@ class ModBusSensors(SendOnlineDatatoDTBase):
 
 class WeatherSensors(SendOnlineDatatoDTBase):
     def __init__(self):
-        super().__init__('./ConfigFiles/DT-base-sensorsv2.xlsx', './ConfigFiles/DT-base-type-sensorsv2.xlsx')
+        super().__init__('./ConfigFiles/DT-base-sensors-weather-station.xlsx', './ConfigFiles/DT-base-type-sensors-weather-station.xlsx')
         
 
 class ControlsSensors(SendOnlineDatatoDTBase):
     def __init__(self):
-        super().__init__('./ConfigFiles/DT-base-sensors.xlsx', './ConfigFiles/DT-base-type-sensors.xlsx')
+        super().__init__('./ConfigFiles/DT-base-sensorsv2.xlsx', './ConfigFiles/DT-base-type-sensorsv2.xlsx')

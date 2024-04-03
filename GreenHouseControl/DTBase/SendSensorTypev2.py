@@ -19,5 +19,5 @@ class SendSensorType(BaseIngress):
                 ),
             )
 
-        #print(return_value)
+        print(return_value)
         return return_value
